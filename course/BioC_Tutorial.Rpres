@@ -11,15 +11,6 @@ font-family: 'Slabo 27px', serif;
 <!-- css:style.css -->
 
 
-MRC LMS Training Resources
-========================================================
-* [Reproducible R](https://lmsbioinformatics.github.io/LMS_Reproducible-R/)
-* [Intermediate R - Data analysis sand Visualisation](https://lmsbioinformatics.github.io/LMS_r-intermediate/)
-* [Statistics in R](https://lmsbioinformatics.github.io/LMS_StatisticsInR/)
-* [Genomic File Formats](https://lmsbioinformatics.github.io/LMS_genomic_formats/)
-* [ChIP-seq (short)](https://lmsbioinformatics.github.io/LMS_ChIPseq_short/)
-* [RNA-seq (short)](https://lmsbioinformatics.github.io/LMS_RNAseq_short/)
-
 Overview
 ========================================================
 
@@ -55,25 +46,43 @@ www.bioconductor.org
 ![BioC webpage](./BioC.png)
 
 
-Bioconductor Release 3.7
+Bioconductor Release 3.9 - it works with R version 3.6.0
 ========================================================
-- Software (1560)
+
+- Software (1741)
+
     + Provides implementation of analysis methods
-- AnnotationData (919)
+    
+- AnnotationData (948)
+
     + mapping between microarray probe, gene, pathway, gene ontology, homology and other annotations
     + Representations of GO, KEGG and other annotations, and can easily access NCBI, Biomart, UCSC and other sources
-- ExperimentData (342)
+    
+- ExperimentData (371)
+
     + code, data and documentation for specific experiments or projects
-- Workflows (21)
+    
+- Workflows (27)
+
     + Common analysis work flows for genomics data
 
 Installating BioC Packages
 ========================================================
-Installing & Using a package:
+
+Installing & Using a package for R version < 3.5.0 , i.e. R.3.4.0:
 
 ```{r eval=FALSE}
 source("http://bioconductor.org/biocLite.R")
 biocLite("GenomicRanges")
+library("GenomicRanges")
+```
+
+Installing & Using a package for R version after 3.5.0, i.e. R.3.6.0:
+
+```{r eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("GenomicRanges")
 library("GenomicRanges")
 ```
 
