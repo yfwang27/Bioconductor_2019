@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Bioconductor by mrccsc</title>
+    <title>Bioconductor by mrclms</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -50,7 +50,7 @@ For more information on the team see our <a href="https://lmsbioinformatics.gith
 <a id="install-r" class="anchor" href="#install-r" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install R.</h4>
 
 <p>R can be installed from the R-project website.<br>
-R 3.1.0 or higher is required for this course.</p>
+R 3.6.0 or higher is required for this course.</p>
 
 <p><a href="http://www.r-project.org/">http://www.r-project.org/</a></p>
 
@@ -69,12 +69,24 @@ To install these,</p>
 
 <ul>
 <li>First launch RStudio</li>
-<li>Install the packages in the R console
+<li>Install the packages in the R console if R version > 3.5.0
 <pre>
-source("<a href="https://bioconductor.org/biocLite.R">https://bioconductor.org/biocLite.R</a>")
-biocLite("GenomicRanges")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(c("GenomicRanges","limma","Rsamtools","GenomicAlignments",
+"org.Hs.eg.db","TxDb.Mmusculus.UCSC.mm9.knownGene","GenomicFeatures","biomaRt"))
 </pre>
 </li>
+
+<li>Install the packages in the R console if R version <= 3.5.0
+<pre>
+source("<a href="https://bioconductor.org/biocLite.R">https://bioconductor.org/biocLite.R</a>")
+biocLite(c("GenomicRanges","limma","Rsamtools","GenomicAlignments",
+"org.Hs.eg.db","TxDb.Mmusculus.UCSC.mm9.knownGene","GenomicFeatures","biomaRt"))
+</pre>
+</li>
+
 </ul>
 
 <h4>
@@ -94,8 +106,9 @@ wget https://github.com/LMSBioinformatics/LMS_Bioconductor/archive/master.zip ./
 
 <p>In this session, we provide introduction to Bioconductor and its comprehensive toolset. This provides an overview of annotation, genomic interval manipulation, BAM file handling and coverage generation<br>
 
+Link to single page, printable HTML - <a href="./course/BioC_Tutorial_SinglePage.html">Bioconductor Single Page</a><br>
 
-Link to HTML presentation - <a href="./course/BioC_Tutorial.html">Session 1</a><br>
+Link to HTML presentation - <a href="./course/BioC_Tutorial.html">Bioconductor</a><br>
 
 <iframe src="./course/BioC_Tutorial.html" width="100%" height="400"></iframe>
 
