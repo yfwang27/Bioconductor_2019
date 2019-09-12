@@ -185,7 +185,7 @@ Constructing GRanges object from data frame
 ========================================================
 
 ```{r, echo=TRUE, eval=TRUE,  message=FALSE}
-mm9genes <- read.table("mm9Genes.txt",sep="\t",header=T)
+mm9genes <- read.table("./data/mm9Genes.txt",sep="\t",header=T)
 head(mm9genes)
 mm9genes.GR <- GRanges(seqnames=mm9genes$chr,
                        ranges=IRanges(start=mm9genes$start,end=mm9genes$end),
@@ -204,6 +204,37 @@ Constructing GRanges object from data frame
 head(mm9genes.GR)
 ```
 
+
+Please try to use makeGRangesFromDataFrame to create a GRanges object from mm9genes (1/2)
+========================================================
+```{r, echo=TRUE, eval=TRUE,  message=FALSE}
+?makeGRangesFromDataFrame
+```
+
+### Usage
+    makeGRangesFromDataFrame(df,
+                         keep.extra.columns=FALSE,
+                         ignore.strand=FALSE,
+                         seqinfo=NULL,
+                         seqnames.field=c("seqnames", "seqname",
+                                          "chromosome", "chrom",
+                                          "chr", "chromosome_name",
+                                          "seqid"),
+                         start.field="start",
+                         end.field=c("end", "stop"),
+                         strand.field="strand",
+                         starts.in.df.are.0based=FALSE)
+
+Please try to use makeGRangesFromDataFrame to create a GRanges object from mm9genes (2/2)
+========================================================
+```{r, echo=TRUE, eval=TRUE,  message=FALSE}
+mm9genes.GR2 <- makeGRangesFromDataFrame(mm9genes)
+head(mm9genes.GR2)
+
+mm9genes.GR3 <- makeGRangesFromDataFrame(mm9genes,
+                                         keep.extra.columns=T)
+head(mm9genes.GR3)
+```
 
 
 GenomicRangesList
@@ -444,7 +475,7 @@ Reading Sequence alignments (BAM/SAM)
 ```{r, echo=TRUE, eval=TRUE,  message=FALSE}
 library("Rsamtools")
 BamFile <- system.file("extdata", "ex1.bam", package="Rsamtools")
-which <- RangesList(seq1=IRanges(1000, 2000),seq2=IRanges(c(100, 1000), c(1000, 2000)))
+which <- IRangesList(seq1=IRanges(1000, 2000),seq2=IRanges(c(100, 1000), c(1000, 2000)))
 what <- c("rname", "strand", "pos", "qwidth", "seq")
 param <- ScanBamParam(which=which, what=what)
 bamReads <-  scanBam(BamFile, param=param)
@@ -464,12 +495,12 @@ Reading Sequence alignments (BAM/SAM)
 
 ```{r, echo=TRUE, eval=FALSE, message=FALSE}
 # Constructor
-ScanBamParam(flag = scanBamFlag(), what = character(0), which)
+ScanBamParam(flag = scanBamFlag(), what = scanBamWhat(), which=which)
 
 # Constructor helpers
 scanBamFlag(isPaired = NA, isProperPair = NA, isUnmappedQuery = NA, 
     hasUnmappedMate = NA, isMinusStrand = NA, isMateMinusStrand = NA,
-    isFirstMateRead = NA, isSecondMateRead = NA, isNotPrimaryRead = NA,
+    isFirstMateRead = NA, isSecondMateRead = NA, isSecondaryAlignment = NA,
     isNotPassingQualityControls = NA, isDuplicate = NA)
 ```
 
@@ -492,7 +523,7 @@ Reading Sequence alignments (BAM/SAM)
 ========================================================
 We can also customise which regions to read
 ```{r, echo=TRUE, eval=TRUE,  message=FALSE}
-region <- RangesList(seq1=IRanges(1000, 2000),seq2=IRanges(1000, 2000))
+region <- IRangesList(seq1=IRanges(1000, 2000),seq2=IRanges(1000, 2000))
 param1 <- ScanBamParam(what=c("rname", "pos", "cigar","qwidth"),which=region)
 SampleAlign1 <- readGAlignments(BamFile,param=param1)
 ```
@@ -586,7 +617,7 @@ head(keys(org.Hs.eg.db, keytype="SYMBOL"))
 
 We can extract other annotations for a particular identifier using <b>select</b> function
 ```{r, echo=TRUE, eval=TRUE, collapse=TRUE}
-select(org.Hs.eg.db, keys = "A1BG", keytype = "SYMBOL", columns = c("SYMBOL", "GENENAME", "CHR") )
+select(org.Hs.eg.db, keys = "A1BG", keytype = "SYMBOL", columns = c("SYMBOL", "GENENAME", "ENSEMBL") )
 ```
 
 
@@ -608,6 +639,7 @@ Annotating results - Example
 ========================================================
 ```{r echo=TRUE, eval=TRUE,  wrapper=TRUE}
 SYM <- select(org.Hs.eg.db, keys = rownames(resultTable), keytype = "ENTREZID", columns = "SYMBOL")
+head(SYM)
 NewResult <- merge(resultTable,SYM,by.x=0,by.y=1)
 head(NewResult)
 ```
@@ -621,25 +653,33 @@ TranscriptDB (TxDb) packages
 
 We will explore TxDb package for Mouse mm9 genome from UCSC. We will first install the package and load in to our current working space.
 
+To install this package, before R < (version "3.5") and enter:
 
 ```{r, echo=TRUE, eval=FALSE}
 source("http://bioconductor.org/biocLite.R")
 biocLite("TxDb.Mmusculus.UCSC.mm9.knownGene")
 ```
 
+To install this package, start R (version "3.6") and enter:
 
+```{r, echo=TRUE, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("TxDb.Mmusculus.UCSC.mm9.knownGene")
+```
 
 TranscriptDb - TxDb.Mmusculus.UCSC.mm9.knownGene
 ========================================================
 By default, the annotation object will have same name as package name. Create an alias for convenience.
-```{r, echo=TRUE, eval=FALSE, message=FALSE}
+```{r, echo=TRUE, eval=T, message=FALSE}
 library("TxDb.Mmusculus.UCSC.mm9.knownGene")
 txdb <- TxDb.Mmusculus.UCSC.mm9.knownGene
 ```
 
 GenomicFeatures also provides functions to create TxDb objects directly from UCSC and Biomart databases: <b> makeTxDbFromBiomart</b> and <b>makeTxDbFromUCSC</b>
 
-```{r, echo=TRUE, eval=TRUE, message=FALSE}
+```{r,  echo=TRUE, eval=FALSE}
 library(GenomicFeatures)
 txdb <- makeTxDbFromUCSC(genome = "mm9", tablename = "knownGene")
 ```
@@ -686,9 +726,9 @@ USCmm9KnownGene <- makeTxDbFromUCSC(genome = "mm9", tablename = "knownGene")
 ```
 
 Save the annotation object and label them appropriately to facilitate reproducible research:
-```{r, echo=TRUE, eval=TRUE,  message=FALSE, results='hide'}
-saveDb(txdb,file="Mouse_ucsc_mm9_20180919.sqlite")
-txdb <- loadDb("Mouse_ucsc_mm9_20180919.sqlite")
+```{r, echo=TRUE, eval=F,  message=FALSE, results='hide'}
+saveDb(txdb,file="Mouse_ucsc_mm9_20190919.sqlite")
+txdb <- loadDb("Mouse_ucsc_mm9_20190919.sqlite")
 ```
 
 Another way of creating TxDb: </b>makeTxDbFromGFF()</b>

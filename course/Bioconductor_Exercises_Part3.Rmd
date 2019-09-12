@@ -1,7 +1,7 @@
 ---
 title: "Bioconductor Exercises Part 3"
 author: "MRC LMS Bioinformatics Core"
-date: "26 September 2018"
+date: "19 September 2019"
 output: html_document
 ---
 
@@ -16,18 +16,17 @@ output: html_document
 1. Check what kind of annotation data can be extracted using `org.Hs.eg.db` package
 2. Print few gene names from `org.Hs.eg.db`
 3. Retrieve gene name, chromosome and Ensembl gene identifiers for “HEBP2” and “PRND” from `org.Hs.eg.db`
-4. Retrieve gene symbol, gene name and gene alias for genes in chromosome 2 for human using `org.Hs.eg.db`
-5. Print non-redundant list of chromosomes from `org.Mm.eg.db`
-6. How many annotation datasets available in Ensembl Biomart?
-7. Retrieve genomic coordinates for human genes from Ensembl biomart and build a GRanges object.
+
+4. How many annotation datasets available in Ensembl Biomart?
+5. Retrieve genomic coordinates for human genes from Ensembl biomart and build a GRanges object.
     + Subset the above GRanges object to include only protein coding genes
     + Subset the GRanges object again with genes in main chromsomes (1-22,X,Y)
     + Create another GRanges object with genes in chr1:1544000-2371000
-8. Retrieve 200 bp upstream promoter sequences for the given gene symbols `AQP1, ASNSP2, KPNA2, FRMD4A, NSUN5, VAC14` from Ensembl human biomart.
+6. Retrieve 200 bp upstream promoter sequences for the given gene symbols `AQP1, ASNSP2, KPNA2, FRMD4A, NSUN5, VAC14` from Ensembl human biomart.
     + Tips: 
     + Read documentation for `getSequence`
     + Use `type="hgnc_symbol"` and `seqType="coding_gene_flank"`
-9. Retrieve the transcript coordinates for genes as GRangesList from `TxDb.Hsapiens.UCSC.hg19.knownGene` (install it from Bioconductor if required)
-10. Retrieve exon coordiantes for genes from `TxDb.Hsapiens.UCSC.hg19.knownGene`
+7. Retrieve the transcript coordinates for genes as GRangesList from `TxDb.Hsapiens.UCSC.hg19.knownGene` (install it from Bioconductor if required)
+8. Retrieve exon coordiantes for genes from `TxDb.Hsapiens.UCSC.hg19.knownGene`
 
     

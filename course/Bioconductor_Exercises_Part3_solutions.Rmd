@@ -1,8 +1,10 @@
 ---
 title: "Bioconductor Exercises Part 3"
 author: "MRC LMS Bioinformatics Core"
-date: "26 September 2018"
+date: "19 September 2019"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ----
@@ -24,27 +26,14 @@ columns(org.Hs.eg.db)
 head(keys(org.Hs.eg.db,keytype="GENENAME"))
 ```
 
-#### 3. Retrieve gene name, chromosome and Ensembl gene identifiers for “HEBP2” and “PRND” from `org.Hs.eg.db`
+#### 3. Retrieve gene name and Ensembl gene identifiers for “HEBP2” and “PRND” from `org.Hs.eg.db`
 
 ```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE, warning=FALSE}
 select(org.Hs.eg.db,keys=c("HEBP2","PRND"),keytype="SYMBOL",
-       columns=c("GENENAME","CHR","ENSEMBL"))
+       columns=c("GENENAME","ENSEMBL"))
 ```
 
-#### 4. Retrieve gene symbol, gene name and gene alias for genes in chromosome 2 for human using `org.Hs.eg.db`
-```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE, warning=FALSE}
-chr2Genes <- select(org.Hs.eg.db,keys="2",keytype="CHR",
-                    columns=c("SYMBOL","GENENAME","ALIAS"))
-head(chr2Genes)
-```
-
-#### 5. Print non-redundant list of chromosomes from `org.Mm.eg.db`
-```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE, warning=FALSE}
-library("org.Mm.eg.db")
-unique(keys(org.Mm.eg.db,keytype="CHR"))
-```
-
-#### 6. How many annotation datasets available in Ensembl Biomart?
+#### 4. How many annotation datasets available in Ensembl Biomart?
 ```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE, warning=FALSE}
 library("biomaRt")
 ensembl <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", host = "sep2015.archive.ensembl.org") # select ensembl
@@ -53,7 +42,11 @@ head(ens_datasets)
 dim(ens_datasets)
 ```
 
-#### 7. Retrieve genomic coordinates for human genes from Ensembl biomart and build a GRanges object.
+```{r, echo=F, eval=F, message=FALSE, collapse=TRUE, warning=FALSE}
+ensembl.19 <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", host = "sep2015.archive.ensembl.org")
+```
+
+#### 5. Retrieve genomic coordinates for human genes from Ensembl biomart and build a GRanges object.
   + Subset the above GRanges object to include only protein coding genes
   + Subset the GRanges object again with genes in main chromsomes (1-22,X,Y)
   + Create another GRanges object with genes in chr1:1544000-2371000
@@ -106,21 +99,22 @@ head(chr1genes)
 chr1genes <- subset(hg19Gene.GR,start>1544000 & end<2371000 & seqnames=="chr1")
 ```
 
-#### 8. Retrieve 200 bp upstream promoter sequences for the given gene symbols `AQP1, ASNSP2, KPNA2, FRMD4A, NSUN5, VAC14` from Ensembl human biomart.
+#### 6. Retrieve 200 bp upstream promoter sequences for the given gene symbols `AQP1, ASNSP2, KPNA2, FRMD4A, NSUN5, VAC14` from Ensembl human biomart.
     + Tips: 
     + Read documentation for `getSequence`
     + Use `type="hgnc_symbol"` and `seqType="coding_gene_flank"`
 
 ```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE, warning=FALSE}
 symbols <- c("AQP1", "ASNSP2", "KPNA2", "FRMD4A", "NSUN5", "VAC14")
-ensembl <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", host = "jul2015.archive.ensembl.org", dataset="hsapiens_gene_ensembl") # select ensembl
+ensembl <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", host = "sep2015.archive.ensembl.org", 
+                   dataset="hsapiens_gene_ensembl") # select ensembl
 
 seq <- getSequence(id=symbols, type="hgnc_symbol",
                   seqType="coding_gene_flank", upstream=200, mart = ensembl)
 ```
 
 
-#### 9. Retrieve the transcript coordinates for genes as GRangesList from `TxDb.Hsapiens.UCSC.hg19.knownGene` (install it from Bioconductor if required)
+#### 7. Retrieve the transcript coordinates for genes as GRangesList from `TxDb.Hsapiens.UCSC.hg19.knownGene` (install it from Bioconductor if required)
 ```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE}
 # source("http://bioconductor.org/biocLite.R")
 # biocLite("TxDb.Hsapiens.UCSC.hg19.knownGene")
@@ -133,13 +127,13 @@ TranscrtipsByGene <- transcriptsBy(hg19txdb,by="gene") # inspect the output
 
 Alternate solution
 
-```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE}
+```{r, echo=TRUE, eval=F, message=FALSE, collapse=TRUE}
 library(GenomicFeatures)
 hg19txdb <- makeTxDbFromUCSC(genome = "hg19", tablename = "knownGene")
 TranscrtipsByGene <- transcriptsBy(hg19txdb,by="gene") # inspect the output
 ```
 
-#### 10. Retrive exon coordiantes for genes from `TxDb.Hsapiens.UCSC.hg19.knownGene`
+#### 8. Retrive exon coordiantes for genes from `TxDb.Hsapiens.UCSC.hg19.knownGene`
 ```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE}
 ExonsByGene <- exonsBy(hg19txdb,by="gene") # inspect the output
 ```
