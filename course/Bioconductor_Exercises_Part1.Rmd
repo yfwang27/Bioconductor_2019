@@ -1,0 +1,23 @@
+---
+title: "Bioconductor Exercises Part 1"
+author: "MRC LMS Bioinformatics Core"
+date: "26 September 2018"
+output: html_document
+---
+
+----
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+
+```
+
+
+# Exercises
+
+1. Import human hg19 gene coordiantes from "hg19Genes.txt and create a GRanges of Transcription start sites (1 bp range).
+    + Tip: How to identify TSS for genes in forward/reverse strand?
+2. Create a GRanges object of human promoters with TSS ± 2000bp.
+    + Tip: Read the documentation for `promoters` function.
+3. Import ELF1 binding sites in K562 cell from Encode (ELF1_K562.bed) and create GRanges object. 
+    + Tips: Import the ELF1 binding sites using `import.bed()` function from `rtracklayer` package
+    + Find ELF1 binding sites overlap with promoters (TSS ± 1kb) using `findOverlaps` and `subsetByOverlaps` (Remember BED format uses 0-based coordinates)
+    

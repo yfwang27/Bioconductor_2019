@@ -1,0 +1,72 @@
+---
+title: "Bioconductor Exercises Part 1"
+author: "MRC LMS Bioinformatics Core"
+date: "26 September 2018"
+output: html_document
+---
+
+----
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+
+```
+
+
+# Solutions
+
+#### 1. Import human hg19 gene coordiantes from "hg19Genes.txt and create a GRanges of Transcription start sites (1 bp range).
+  + Tip: How to identify TSS for genes in forward/reverse strand?
+
+```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE}
+library(GenomicRanges)
+hg19Gene <- read.table("hg19Genes.txt",sep="\t",header=T)
+
+hg19Gene$TSS <- ifelse(hg19Gene$strand==1,hg19Gene$start,hg19Gene$end)
+
+hg19TSS <- GRanges(seqnames=hg19Gene$chr,
+                       ranges=IRanges(start=hg19Gene$TSS,end=hg19Gene$TSS),
+                       strand=ifelse(hg19Gene$strand==1,"+","-"),
+                       EnsemblID=hg19Gene$ensID,
+                       Symbol=hg19Gene$GeneSym)
+hg19TSS
+```
+
+
+#### 2. Create a GRanges object of human promoters with TSS ± 2000bp.
+    + Tip: Read the documentation for `promoters` function.
+```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE}
+# First create GRanges object with gene coordinates
+hg19Gene.GR <- GRanges(seqnames=hg19Gene$chr,
+                       ranges=IRanges(start=hg19Gene$start,end=hg19Gene$end),
+                       strand=ifelse(hg19Gene$strand==1,"+","-"),
+                       EnsemblID=hg19Gene$ensID,
+                       Symbol=hg19Gene$GeneSym)
+# Identifying promoters
+hg19Promoters <- promoters(hg19Gene.GR,upstream=2000,downstream=2000)
+hg19Promoters
+```
+
+#### 3. Import ELF1 binding sites in K562 cell from Encode (ELF1_K562.bed) and create GRanges object. 
+    + Tips: Import the ELF1 binding sites using `import.bed()` function from `rtracklayer` package
+    + Find ELF1 binding sites overlap with promoters (TSS ± 1kb) using `findOverlaps` and `subsetByOverlaps` (Remember BED format uses 0-based coordinates)
+
+```{r, echo=TRUE, eval=TRUE, message=FALSE, collapse=TRUE}
+library("rtracklayer")
+ELF1 <- read.table("ELF1_K562.bed",sep="\t",header=F)
+ELF1GR <- GRanges(seqnames=ELF1$V1, IRanges(start=ELF1$V2+1,end=ELF1$V3))
+ELF1GR_A <- import.bed("ELF1_K562.bed")
+
+
+# ELF1 binding sites overlap with promoters using `findOverlaps`
+hg19Promoters <- promoters(hg19Gene.GR,upstream=1000,downstream=1000)
+ELF1GR <- reduce(ELF1GR) # merging overlapping peaks
+ELF1overlap <- findOverlaps(ELF1GR,hg19Promoters,ignore.strand=T)
+ELF1overlap.m <- as.matrix(ELF1overlap)
+ELF1_promoters <- ELF1GR[ELF1overlap.m[,"queryHits"],]
+ELF1_promoters
+
+# ELF1 binding sites overlap with promoters using `subsetByOverlaps`
+ELF1_promoters1 <- subsetByOverlaps(ELF1GR,hg19Promoters)
+ELF1_promoters1
+```
+
+<b>Note the differences in the outputs!</b>

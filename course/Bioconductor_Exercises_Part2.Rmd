@@ -1,0 +1,25 @@
+---
+title: "Bioconductor Exercises Part 2"
+author: "MRC LMS Bioinformatics Core"
+date: "26 September 2018"
+output: html_document
+---
+
+----
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+
+```
+
+
+# Exercises
+
+* Download the following BAM and index files (.bai) (ENCODE data - ChIP-Seq of CTCF in Ag04449 human fibroblast cells).
+  + http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeUwTfbs/wgEncodeUwTfbsAg04449CtcfStdAlnRep1.bam
+  + http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeUwTfbs/wgEncodeUwTfbsAg04449CtcfStdAlnRep1.bam.bai
+* Use `readGAlignments` to read the bam. Construct an `ScanBamParam` object that accepts only aligned reads, passing quality control and not duplicates.
+* Compute genome wide coverage using `coverage` function
+* Export coverage as bigWig using `export.bw()` from rtracklayer package and visualise it using IGV
+* Compute number of reads overlapping with hg19 promoters (TSS ± 1kb) and export the results as text file.
+
+
+    
