@@ -1,0 +1,135 @@
+Introduction to R Loading Libraries
+========================================================
+author: LMS Bioinformatics
+date: 18 September 2019
+autosize: true
+width: 1440
+height: 1100
+font-import: <link href='http://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+font-family: 'Slabo 27px', serif;
+css: style.css
+
+
+What are libraries in R?
+========================================================
+R libraries or packages are collections of functions developed by the community. 
+R packages include 
+- reusable R functions 
+- the documentation for these functions and 
+- sample data to test their functionality. 
+
+
+
+What are repositories?
+========================================================
+
+A repository is a place where packages are deposited by the community and you can install them from it. The two most popular repositories for R packages are:
+- CRAN
+- Bioconductor
+
+
+How to install R packages from CRAN?
+========================================================
+
+You can install the packages from CRAN using the function install.packages()
+
+For example,
+
+```{r,eval=F}
+
+install.packages("babynames")
+
+```
+
+To load the installed packages and use them, you can use the library() function
+
+For example,
+
+
+```{r,eval=F}
+
+library(babynames)
+
+```
+
+
+You can also install packages through the R studio menu
+
+**-> Tools -> Install packages ..**
+
+
+How to install R packages from Bioconductor in older versions of R?
+========================================================
+
+If you are using an older version of R (R < 3.5.0), you have to use biocLite to install Bioconductor packages.
+
+To install packages from Bioconductor, you have to first source the "biocLite" package. 
+
+```{r,eval=F}
+
+source("https://bioconductor.org/biocLite.R")
+
+```
+
+Then, you can install any packages from Bioconductor using the biocLite() function
+
+For example,
+
+```{r,eval=F}
+
+biocLite("DESeq2")
+
+```
+
+To load the installed packages and use them, you can use the library() function
+
+For example,
+
+
+```{r,eval=F}
+
+library(DESeq2)
+
+```
+
+
+How to get help about the packages?
+========================================================
+
+You can get the documentation of the package by using the function help() or "??"
+
+For example
+```{r,eval=F}
+
+help(babynames)
+
+# Or you can use "??"
+?? babynames
+
+```
+
+
+For a more detailed information on each and every parameter of all the functions in a package, you can refer to the reference manual or the in the package webpage or by using the browseVignettes() function.
+
+
+For example,
+
+
+```{r,eval=F}
+
+browseVignettes("DESeq2")
+
+```
+
+
+You can see what libraries are available in the Packages panel or by the library() function with no arguments supplied
+
+```{r,eval=F}
+
+library()
+
+```
+
+
+End of the session
+========================================================
